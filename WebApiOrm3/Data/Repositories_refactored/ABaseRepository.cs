@@ -5,7 +5,7 @@ namespace WebApiOrm.Data.Repositories_refactored;
 
 public abstract class ABaseRepository<T>(
    DataContext dataContext
-) where T : AEntity {
+) : IBaseRepository<T> where T : AEntity {
    
    // fields
    protected readonly DbSet<T> _dbSet = dataContext.Set<T>();

@@ -3,7 +3,7 @@ using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
 namespace WebApiOrm.Data.Repositories_refactored;
 
-public class UsersRepository_refactored(
+public class UsersRepository(
    DataContext dataContext
 ) : ABaseRepository<User>(dataContext), IUsersRepository {
    private readonly DataContext _dataContext = dataContext;
@@ -23,21 +23,14 @@ public class UsersRepository_refactored(
       _dataContext.LogChangeTracker("User: FindById");
       return user;
    }
-
-   public Person? FindPersonByUserId(Guid userId) {
-      var user = _dbSet.FirstOrDefault(user => user.Id == userId); 
-      _dataContext.LogChangeTracker("User: FindPersonByUserId");
-      var person = user?.Person;
-      return person;
-   }
-
+   
    // Custom method: load a user along with its associated person.
    public User? FindByIdJoinPerson(Guid id) {
       var user = _dbSet
-         .Where(u => u.Id == id)
-         .Include(u => u.Person)
-         .FirstOrDefault();
-      _dataContext.LogChangeTracker("User: FindByIdJoinPerson");
-      return user;
+          .Where(u => u.Id == id)
+          .Include(u => u.Person)
+          .FirstOrDefault();
+       _dataContext.LogChangeTracker("User: FindByIdJoinPerson");
+       return user;
    }
 }

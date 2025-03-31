@@ -3,11 +3,12 @@ using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
 namespace WebApiOrm.Data.Repositories_refactored;
 
-public class CarsRepository_refactored(
+public class CarsRepository(
    DataContext dataContext
 ) : ABaseRepository<Car>(dataContext), ICarsRepository {
+   
    private readonly DataContext _dataContext = dataContext;
-
+   
    // inherited from ABaseRepository<T>
    // protected readonly DbSet<T> _dbSet
    // public virtual T? FindById(Guid id)
@@ -52,5 +53,13 @@ public class CarsRepository_refactored(
          .ToList();
       _dataContext.LogChangeTracker("Car: SelectCarsByPersonIdAsync ");
       return cars;
+   }
+   
+   public Car? FindByIdJoinPerson(Guid id) {
+      var car = _dbSet
+         .Include(car => car.Person)
+         .FirstOrDefault(car => car.Id == id);
+      _dataContext.LogChangeTracker("Car: FindByIdJoinPerson ");
+      return car;
    }
 }

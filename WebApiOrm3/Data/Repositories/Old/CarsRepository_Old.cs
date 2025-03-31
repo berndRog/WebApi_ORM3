@@ -3,9 +3,9 @@ using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
 namespace WebApiOrm.Data.Repositories;
 
-public class CarsRepository(
+public class CarsRepository_Old(
    DataContext dataContext
-) : ICarsRepository {
+) : ICarsRepository_Old {
    private readonly DbSet<Car> _dbSetCars = dataContext.Cars; // => Set<Car>
 
    public Car? FindById(Guid id) {
@@ -68,7 +68,7 @@ public class CarsRepository(
          query = query.Where(car => car.Price <= priceMax.Value);
 
       var cars = query.ToList();
-      dataContext.LogChangeTracker("Car: SelectByAttributesAsync ");
+      dataContext.LogChangeTracker("Car: SelectByAttributes ");
       return cars;
    }
    
@@ -76,8 +76,15 @@ public class CarsRepository(
       var cars = _dbSetCars
          .Where(car => car.PersonId == personId)
          .ToList();
-      dataContext.LogChangeTracker("Car: SelectCarsByPersonIdAsync ");
+      dataContext.LogChangeTracker("Car: SelectCarsByPersonId ");
       return cars;
    }
-   
+
+   public Car? FindByIdJoinPerson(Guid id) {
+      var car = _dbSetCars
+         .Include(car => car.Person)
+         .FirstOrDefault(car => car.Id == id);
+      dataContext.LogChangeTracker("Car: FindByIdJoinPerson ");
+      return car;
+   }
 }

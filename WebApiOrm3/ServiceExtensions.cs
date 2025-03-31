@@ -11,14 +11,13 @@ public static class ServiceExtensions {
       this IServiceCollection services,
       IConfiguration configuration
    ) {
-      // services.AddScoped<IPeopleRepository, PeopleRepository>();
-      // services.AddScoped<IUsersRepository, UsersRepository>();
-      // services.AddScoped<ICarsRepository, CarsRepository>();
+      // services.AddScoped<IPeopleRepository_Old, PeopleRepository_Old>();
+      // services.AddScoped<ICarsRepository_Old, CarsRepository_Old>();
       
-      services.AddScoped<IPeopleRepository, PeopleRepository_refactored>();
-      services.AddScoped<IUsersRepository, UsersRepository_refactored>();
-      services.AddScoped<ICarsRepository, CarsRepository_refactored>();
-      services.AddScoped<IMoviesRepository, MoviesRepository_refactored>();
+      services.AddScoped<IPeopleRepository, PeopleRepository>();
+      services.AddScoped<IUsersRepository, UsersRepository>();
+      services.AddScoped<ICarsRepository, CarsRepository>();
+      services.AddScoped<IMoviesRepository, MoviesRepository>();
       
       // Add DbContext (Database) to DI-Container
       var (useDatabase, dataSource) = DataContext.EvalDatabaseConfiguration(configuration);

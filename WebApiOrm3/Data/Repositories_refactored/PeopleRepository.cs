@@ -3,9 +3,10 @@ using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
 namespace WebApiOrm.Data.Repositories_refactored;
 
-public class PeopleRepository_refactored(
+public class PeopleRepository(
    DataContext dataContext
 ) : ABaseRepository<Person>(dataContext), IPeopleRepository {
+   
    private readonly DataContext _dataContext = dataContext;
 
    // inherited from ABaseRepository<T>
@@ -45,7 +46,7 @@ public class PeopleRepository_refactored(
       _dataContext.LogChangeTracker("Person: FindByIdJoinCars");
       return person;
    }
-
+   
    public Person? FindByIdJoinMovies(Guid id) {
       var person = _dbSet
          .Where(person => person.Id == id)

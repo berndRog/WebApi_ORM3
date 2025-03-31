@@ -236,7 +236,6 @@ public class Seed {
       Person4.AddCar(Car8); 
       return this;
    }
-
    
    public static IEnumerable<User> InitPeopleWithUser(
       IEnumerable<Person> people,
@@ -280,6 +279,7 @@ public class Seed {
       var arrayMovies = movies.ToArray();
       if(arrayPeople.Count() != 4 || arrayMovies.Count() != 8) 
          throw new ArgumentException("Invalid number of people or cars");
+      
       arrayPeople[0].AddMovie(arrayMovies[0]);
       arrayPeople[0].AddMovie(arrayMovies[2]);
       arrayPeople[0].AddMovie(arrayMovies[4]);
@@ -288,6 +288,7 @@ public class Seed {
       arrayPeople[1].AddMovie(arrayMovies[1]);
       arrayPeople[1].AddMovie(arrayMovies[3]);
       arrayPeople[1].AddMovie(arrayMovies[5]);
+      arrayPeople[1].AddMovie(arrayMovies[7]);
          
       arrayPeople[2].AddMovie(arrayMovies[0]);
       arrayPeople[2].AddMovie(arrayMovies[1]);

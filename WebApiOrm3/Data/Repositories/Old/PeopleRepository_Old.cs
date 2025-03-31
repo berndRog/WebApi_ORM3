@@ -3,9 +3,9 @@ using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
 namespace WebApiOrm.Data.Repositories;
 
-public class PeopleRepository(
+public class PeopleRepository_Old(
    DataContext dataContext
-) : IPeopleRepository {
+) : IPeopleRepository_Old {
    
    // fields
    private readonly DbSet<Person> _dbSetPeople = dataContext.People; // => Set<Person>

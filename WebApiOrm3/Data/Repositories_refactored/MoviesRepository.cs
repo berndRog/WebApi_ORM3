@@ -3,7 +3,7 @@ using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
 namespace WebApiOrm.Data.Repositories_refactored;
 
-public class MoviesRepository_refactored(
+public class MoviesRepository(
    DataContext dataContext
 ) : ABaseRepository<Movie>(dataContext), IMoviesRepository {
    private readonly DataContext _dataContext = dataContext;
@@ -23,5 +23,7 @@ public class MoviesRepository_refactored(
       _dataContext.LogChangeTracker("User: FindById");
       return movie;
    }
+   
+   
 
 }
