@@ -12,18 +12,18 @@ public class Person: AEntity {
    // 1:1 navigation property Person <-> User (1,1):(0,1)
    public User? User { get; private set; } = null;
    // 1:n navigation collection Person <-> Cars (0,1):(0,n)
-   public ICollection<Car> Cars { get; private set; } = new List<Car>();
+   public ICollection<Car> Cars { get; private set; } = [];
    // m:n navigation collection Person <-> Movies (0,m):(0,n)
-   public ICollection<Movie> Movies { get; private set; } = new List<Movie>();
+   public ICollection<Movie> Movies { get; private set; } = [];
    // 1:n navigation collection Person <-> Tickets (1,1):(0,n) 
-   public ICollection<Ticket> Tickets { get; private set; } = new List<Ticket>();
-
+   public ICollection<Ticket> Tickets { get; private set; } = [];
    
-   // EF Core uses this ctor and reflexion to construct new Person object,
+   // ctor EF Core.
+   // EF Coreuses this ctor and reflexion to construct new Person object,
    // while ignoring private set in the properties
    public Person() { } // also needed for NullPerson
    
-   // ctor for Doamin Model
+   // ctor Domain Model
    public Person(Guid id, string firstName, string lastName, string? email = null,
       string? phone = null) {
       Id = id;

@@ -2,10 +2,10 @@
 // using DeepEqual.Syntax;
 // using WebApiOrm.Core.DomainModel.Entities;
 // using WebApiOrmTest;
-// using WebApiOrmTest.Persistence.Repositories;
-// using WebOrmTest.Data.Repositories;
+// using WebApiOrmTest.Persistence.Repositories_Old;
+// using WebOrmTest.Data.Repositories_Old;
 // using Xunit;
-// namespace OrmTest.Data.Repositories;
+// namespace OrmTest.Data.Repositories_Old;
 //
 // [Collection(nameof(SystemTestCollectionDefinition))]
 // public class UsersRepositoryUt : BaseRepository {

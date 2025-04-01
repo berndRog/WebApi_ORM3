@@ -8,9 +8,9 @@ public class Movie: AEntity {
    public string Director { get; private set; } = string.Empty;
    public int Year { get; private set; } = 0;
    // n:m navigation collection Movie <-> People (0,n):(0,m)
-   public ICollection<Person> People { get; private set; } = new List<Person>();
+   public ICollection<Person> People { get; private set; } = [];
    // n:1 Movies -> Tickets [0..*]
-   public ICollection<Ticket> Tickets { get; private set; } = new List<Ticket>();
+   public ICollection<Ticket> Tickets { get; private set; } = [];
 
    // ctor: EF Core uses this ctor and reflexion to construct new object,
    // while ignoring private set 

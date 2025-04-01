@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
-namespace WebApiOrm.Data.Repositories_refactored;
+namespace WebApiOrm.Data.Repositories;
 
 public class CarsRepository(
    DataContext dataContext

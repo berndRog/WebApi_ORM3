@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApiOrm.Core;
 using WebApiOrm.Core.DomainModel.Entities;
-namespace WebApiOrm.Data.Repositories_refactored;
+namespace WebApiOrm.Data.Repositories;
 
 public class MoviesRepository(
    DataContext dataContext
@@ -18,12 +18,20 @@ public class MoviesRepository(
    // public virtual void Update(T entity) 
    // public virtual void Remove(T entity) 
    
+   // get movies by title
    public Movie? FindByTitle(string title) {
       var movie= _dbSet.FirstOrDefault(movie => movie.Title == title);
-      _dataContext.LogChangeTracker("User: FindById");
+      _dataContext.LogChangeTracker("User: FindByTitle");
       return movie;
    }
-   
-   
 
+   // get visitors for a movie
+   public Movie? FindByIdJoinPerson(Guid id) {
+      var movie = _dbSet
+         .Where(movie => movie.Id == id)
+         .Include(movie => movie.People)
+         .FirstOrDefault();
+      _dataContext.LogChangeTracker("User: FindByIdJoinPerson");
+      return movie;
+   }
 }

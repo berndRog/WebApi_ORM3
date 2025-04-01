@@ -210,8 +210,15 @@ public class PeopleRepositoryUt : BaseRepository {
    [Fact]
    public void DeleteWithCarsCascadingUt() {
       // Arrange
-      _seed.InitCars();
-      _peopleRepository.AddRange(_seed.People);
+      _peopleRepository.Add(_seed.Person1);
+      _dataContext.SaveAllChanges();
+      _dataContext.ClearChangeTracker();
+      
+      var person = _peopleRepository.FindById(_seed.Person1.Id);
+      person.AddCar(_seed.Car1);
+      person.AddCar(_seed.Car2);
+      _carsRepository.Add(_seed.Car1);
+      _carsRepository.Add(_seed.Car2);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
 
@@ -267,66 +274,56 @@ public class PeopleRepositoryUt : BaseRepository {
    [Fact]
    public void AddRangeWithMovies_FindByIdJoinMoviesUt() {
       // Arrange
-      _peopleRepository.Add(_seed.Person1);
-      _peopleRepository.Add(_seed.Person3);
+      _peopleRepository.AddRange(_seed.People);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Act
       // domain model
-      var person1 = _peopleRepository.FindById(_seed.Person1.Id);
-      var person3 = _peopleRepository.FindById(_seed.Person3.Id);
-
-      person1.AddMovie(_seed.Movie1);
-      person1.AddMovie(_seed.Movie3);
-     // person1.AddMovie(_seed.Movie5);
-     // person1.AddMovie(_seed.Movie7);
-      person3.AddMovie(_seed.Movie1);
-      person3.AddMovie(_seed.Movie2);
-      var movies = new List<Movie> {
-         _seed.Movie1, _seed.Movie2, _seed.Movie3
-       //  _seed.Movie5, _seed.Movie7
-      };
-      _moviesRepository.AddRange(movies);
+      var people = _peopleRepository.SelectAll();
+      var (updPeople, updMovies) =  Seed.InitPeopleWithMovies(people, _seed.Movies);
+      _moviesRepository.AddRange(updMovies);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Assert
-      var actualPerson = _peopleRepository.FindByIdJoinMovies(person1.Id);
-      var expected = person1;
-
-      // Assert
       var comparison = new ComparisonBuilder()
-         .IgnoreCircularReferences()
+         .IgnoreProperty<Movie>(m => m.People)
          .Create();
-     // Assert.True(actualPerson.IsDeepEqual(expected, comparison));
-      
-      Assert.Equivalent(expected, actualPerson);
+      foreach (var expected in updPeople) {
+         var actPerson = _peopleRepository.FindByIdJoinMovies(expected.Id);
+         Assert.True(actPerson.IsDeepEqual(expected, comparison));
+
+      }
    }
    #endregion
    
    
-   // [Fact]
-   // public void DeleteWithCarsCascadingUt() {
-   //    // Arrange
-   //    _seed.InitCars();
-   //    _peopleRepository.AddRange(_seed.People);
-   //    _dataContext.SaveAllChanges();
-   //    _dataContext.ClearChangeTracker();
-   //
-   //    // Act
-   //    _peopleRepository.Remove(_seed.Person1); 
-   //    _dataContext.SaveAllChanges();
-   //
-   //    // Assert
-   //    var actualPerson= _peopleRepository.FindById(_seed.Person1.Id);
-   //    var actualCar1 = _carsRepository.FindById(_seed.Car1.Id);
-   //    var actualCar2 = _carsRepository.FindById(_seed.Car2.Id);
-   //
-   //    Assert.Null(actualPerson);
-   //    Assert.Null(actualCar1);
-   //    Assert.Null(actualCar2);
-   //
-   // }
+   [Fact]
+   public void DeleteWithMoviesCascadingUt() {
+      // Arrange
+      // Arrange
+      _peopleRepository.AddRange(_seed.People);
+      _dataContext.SaveAllChanges();
+      _dataContext.ClearChangeTracker();
+      // domain model
+      var people = _peopleRepository.SelectAll();
+      var (updPeople, updMovies) =  Seed.InitPeopleWithMovies(people, _seed.Movies);
+      _moviesRepository.AddRange(updMovies);
+      _dataContext.SaveAllChanges();
+      _dataContext.ClearChangeTracker();
+   
+      // Act
+      _peopleRepository.Remove(_seed.Person1); 
+      _dataContext.SaveAllChanges();
+   
+      // Assert
+      var actualPerson= _peopleRepository.FindById(_seed.Person1.Id);
+     
+      Assert.Null(actualPerson);
+     // Assert.Null(actualCar1);
+     // Assert.Null(actualCar2);
+   
+   }
    
 }

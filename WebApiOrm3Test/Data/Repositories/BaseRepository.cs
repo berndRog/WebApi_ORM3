@@ -1,4 +1,6 @@
 using System;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebApiOrm.Core;
 using WebApiOrm.Data;
@@ -23,8 +25,8 @@ public abstract class BaseRepository {
       IServiceCollection services = new ServiceCollection();
       // Add Core, UseCases, Mapper, ...
       //services.AddCore();
-      // Add Repositories, Test Databases, ...
-      services.AddDataTest();
+      // Add Repositories_Old, Test Databases, ...
+      var(useDatabase, dataSource) = services.AddDataTest();
       // Build ServiceProvider,
       // and use Dependency Injection or Service Locator Pattern
       var serviceProvider = services.BuildServiceProvider()
@@ -33,10 +35,24 @@ public abstract class BaseRepository {
       //-- Service Locator 
       var dbContext = serviceProvider.GetRequiredService<DataContext>()
          ?? throw new Exception("Failed to create DbContext");
-      // File based
-      dbContext.Database.EnsureDeleted();
+
       // In-Memory
-      // dbContext.Database.OpenConnection();
+      if (useDatabase == "SqliteInMemory") {
+         dbContext.Database.OpenConnection();
+      } else if (useDatabase == "Sqlite") {
+         dbContext.Database.EnsureDeleted();
+         // Workaround  SQLite I/O Errors
+         SqliteConnection connection = new SqliteConnection(dataSource);
+         connection.Open();
+         using var command = connection.CreateCommand();
+         // Switch the journal mode from WAL to DELETE.
+         command.CommandText = "PRAGMA journal_mode = DELETE;";
+         var result = command.ExecuteScalar();
+         Console.WriteLine("Current journal mode: " + result);
+         connection.Close();
+      } else {
+         dbContext.Database.EnsureDeleted();
+      }
       dbContext.Database.EnsureCreated();
       
       _dataContext = serviceProvider.GetRequiredService<IDataContext>()

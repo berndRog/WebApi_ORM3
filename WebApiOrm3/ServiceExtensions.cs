@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApiOrm.Core;
 using WebApiOrm.Data;
-using WebApiOrm.Data.Repositories_refactored;
 using WebApiOrm.Data.Repositories;
 namespace WebApiOrm;
 
@@ -23,7 +22,8 @@ public static class ServiceExtensions {
       var (useDatabase, dataSource) = DataContext.EvalDatabaseConfiguration(configuration);
       
       switch (useDatabase) {
-         case "Sqlite":
+         case "Sqlite": 
+         case "SqliteInMemory":
             services.AddDbContext<IDataContext, DataContext>(options => 
                options.UseSqlite(dataSource)
             );

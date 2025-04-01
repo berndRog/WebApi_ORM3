@@ -92,6 +92,10 @@ public class DataContext(
                "Data Source=" + Path.Combine(path, connectionString) + ".db";
             Console.WriteLine($"....: EvalDatabaseConfiguration: Sqlite {dataSourceSqlite}");
             return (useDatabase, dataSourceSqlite);
+         case "SqliteInMemory":
+            var dataSourceSqliteInMemory = "Data Source=:memory:";
+            Console.WriteLine($"....: EvalDatabaseConfiguration: SqliteInMemory {dataSourceSqliteInMemory}");
+            return (useDatabase, dataSourceSqliteInMemory);
          default:
             throw new Exception("appsettings.json Problems with database configuration");
       }   

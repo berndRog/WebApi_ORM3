@@ -11,4 +11,5 @@ public interface IMoviesRepository: IBaseRepository<Movie> {
    // void Remove(Movie movie);
 
    Movie? FindByTitle(string title);
+   Movie? FindByIdJoinPerson(Guid id);
 }

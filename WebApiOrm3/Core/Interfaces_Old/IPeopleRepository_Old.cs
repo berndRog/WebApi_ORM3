@@ -1,5 +1,5 @@
 using WebApiOrm.Core.DomainModel.Entities;
-namespace WebApiOrm.Core;
+namespace WebApiOrm.Core.Interfaces_Old;
 
 public interface IPeopleRepository_Old {
    Person? FindById(Guid id);
