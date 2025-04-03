@@ -9,10 +9,9 @@ public class MoviesRepository(
    private readonly DataContext _dataContext = dataContext;
 
    // inherited from ABaseRepository<T>
-   // protected readonly DataContext dataContext
    // protected readonly DbSet<T> _dbSet
    // public virtual T? FindById(Guid id)
-   // public virtual IEnumerable<T> SelectAll()
+   // public virtual IEnumerable<T>? SelectAll()
    // public virtual void Add(T entity) 
    // public virtual void AddRange(IEnumerable<T> entities) 
    // public virtual void Update(T entity) 

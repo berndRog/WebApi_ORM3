@@ -15,8 +15,12 @@ public class Car: AEntity {
    // dependent entity must have a foreign key property
    public Guid PersonId { get; private set; } = NullPerson.Instance.Id;
    
-   // EF Core requires a constructor
-   public Car() { }  // for subclasses only
+   // ctor EF Core.
+   // EF Coreuses this ctor and reflexion to construct new Person object,
+   // while ignoring private set in the properties
+   public Car() { }  
+   
+   
    public Car(Guid id, string maker, string model, int year, decimal price, 
       string? imageUrl = null, Guid? personId = null) {
       Id = id;
@@ -28,7 +32,7 @@ public class Car: AEntity {
       if(personId.HasValue) PersonId = personId.Value;
    }
   
-   public void SetImageUrl(string imageUrl) =>
+   public void SetImageUrl(string? imageUrl) =>
       ImageUrl = imageUrl;
 
    public void Set(Person person) {

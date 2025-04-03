@@ -12,13 +12,13 @@ public class CarsRepository(
    // inherited from ABaseRepository<T>
    // protected readonly DbSet<T> _dbSet
    // public virtual T? FindById(Guid id)
-   // public virtual IEnumerable<T> SelectAll()
+   // public virtual IEnumerable<T>? SelectAll()
    // public virtual void Add(T entity) 
    // public virtual void AddRange(IEnumerable<T> entities) 
    // public virtual void Update(T entity) 
    // public virtual void Remove(T entity) 
    
-   public  IEnumerable<Car> SelectByAttributes(
+   public  IEnumerable<Car>? SelectByAttributes(
       string? maker = null, 
       string? model = null,
       int? yearMin = null,
@@ -45,9 +45,8 @@ public class CarsRepository(
       _dataContext.LogChangeTracker("Car: SelectByAttributesAsync ");
       return cars;
    }
-
-
-   public IEnumerable<Car> SelectCarsByPersonId(Guid personId) {
+   
+   public IEnumerable<Car>? SelectCarsByPersonId(Guid personId) {
       var cars = _dbSet
          .Where(car => car.PersonId == personId)
          .ToList();

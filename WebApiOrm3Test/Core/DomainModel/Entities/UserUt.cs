@@ -4,7 +4,7 @@ using WebApiOrm.Core.Utilities;
 using WebApiOrmTest;
 using Xunit;
 
-namespace OrmTest.Core.DomainModel.Entities;
+namespace WebOrmTest.Core.DomainModel.Entities;
 public class UserUt {
    
    private readonly Seed _seed = new();

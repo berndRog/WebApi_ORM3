@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeepEqual;
 using DeepEqual.Syntax;
@@ -7,7 +8,7 @@ using WebApiOrmTest;
 using WebApiOrmTest.Persistence.Repositories;
 using WebOrmTest.Data.Repositories;
 using Xunit;
-namespace OrmTest.Data.Repositories;
+namespace WebOrmTest.Data.Repositories;
 
 [Collection(nameof(SystemTestCollectionDefinition))]
 public class PeopleRepositoryUt : BaseRepository {
@@ -156,22 +157,21 @@ public class PeopleRepositoryUt : BaseRepository {
    
    #region PersonJoinCars
    [Fact]
-   public void AddJoinCarsUt() {
+   public void FindByIdJoinCarsUt() {
       // Arrange
-      var person = _seed.Person1;
       // add person to repository first
-      _peopleRepository.Add(person);  
+      _peopleRepository.Add(_seed.Person1);  
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Act
-      var actualPerson = _peopleRepository.FindById(person.Id);
-      Assert.NotNull(actualPerson);
+      var person = _peopleRepository.FindById(_seed.Person1.Id);
+      Assert.NotNull(person);
       // Domain model
       var car1 = _seed.Car1;
       var car2 = _seed.Car2;
-      actualPerson.AddCar(car1);
-      actualPerson.AddCar(car2);
+      person.AddCar(car1);
+      person.AddCar(car2);
       _dataContext.LogChangeTracker("AddJoinCarsUt");
       // add the cars to the repository
       _carsRepository.Add(car1);
@@ -181,30 +181,18 @@ public class PeopleRepositoryUt : BaseRepository {
       
       // Assert 
       var actual = _peopleRepository.FindByIdJoinCars(person.Id);      
-
+      Assert.NotNull(actual);
+      
+      Console.WriteLine(BaseRepository.ToPrettyJson("person", person));
+     
+      Console.WriteLine(BaseRepository.ToPrettyJson("actual", actual));
+      
+      
       // Assert
       var comparison = new ComparisonBuilder()
          .IgnoreCircularReferences()
          .Create();
-      Assert.True(actualPerson.IsDeepEqual(actual, comparison));
-   }
-   
-   [Fact]
-   public void FindByIdJoinCarsUt() {
-      // Arrange
-      _seed.InitCars();
-      _peopleRepository.AddRange(_seed.People);
-      _dataContext.SaveAllChanges();
-      _dataContext.ClearChangeTracker();
-
-      // Act
-      var actual = _peopleRepository.FindByIdJoinCars(_seed.Person1.Id);      
-
-      // Assert
-      var comparison = new ComparisonBuilder()
-         .IgnoreCircularReferences()
-         .Create();
-      Assert.True(_seed.Person1.IsDeepEqual(actual, comparison));
+      Assert.True(person.IsDeepEqual(actual, comparison));
    }
    
    [Fact]
@@ -215,6 +203,7 @@ public class PeopleRepositoryUt : BaseRepository {
       _dataContext.ClearChangeTracker();
       
       var person = _peopleRepository.FindById(_seed.Person1.Id);
+      Assert.NotNull(person);
       person.AddCar(_seed.Car1);
       person.AddCar(_seed.Car2);
       _carsRepository.Add(_seed.Car1);
@@ -281,7 +270,9 @@ public class PeopleRepositoryUt : BaseRepository {
       // Act
       // domain model
       var people = _peopleRepository.SelectAll();
+      Assert.NotNull(people);
       var (updPeople, updMovies) =  Seed.InitPeopleWithMovies(people, _seed.Movies);
+      Assert.NotNull(updPeople);
       _moviesRepository.AddRange(updMovies);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
@@ -296,8 +287,6 @@ public class PeopleRepositoryUt : BaseRepository {
 
       }
    }
-   #endregion
-   
    
    [Fact]
    public void DeleteWithMoviesCascadingUt() {
@@ -308,7 +297,10 @@ public class PeopleRepositoryUt : BaseRepository {
       _dataContext.ClearChangeTracker();
       // domain model
       var people = _peopleRepository.SelectAll();
+      Assert.NotNull(people);
       var (updPeople, updMovies) =  Seed.InitPeopleWithMovies(people, _seed.Movies);
+      Assert.NotNull(updPeople);
+      Assert.NotNull(updMovies);
       _moviesRepository.AddRange(updMovies);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
@@ -325,5 +317,6 @@ public class PeopleRepositoryUt : BaseRepository {
      // Assert.Null(actualCar2);
    
    }
+   #endregion
    
 }

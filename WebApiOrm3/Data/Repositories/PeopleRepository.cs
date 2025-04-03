@@ -13,15 +13,15 @@ public class PeopleRepository(
    // protected readonly IDataContext dataContext
    // protected readonly DbSet<T> _dbSet
    // public virtual T? FindById(Guid id)
-   // public virtual IEnumerable<T> SelectAll()
+   // public virtual IEnumerable<T>? SelectAll()
    // public virtual void Add(T entity) 
    // public virtual void AddRange(IEnumerable<T> entities) 
    // public virtual void Update(T entity) 
    // public virtual void Remove(T entity) 
    
-   public IEnumerable<Person> SelectByName(string namePattern) {
+   public IEnumerable<Person>? SelectByName(string namePattern) {
       if (string.IsNullOrWhiteSpace(namePattern))
-         return Enumerable.Empty<Person>();
+         return null;
       var people = _dbSet
          .Where(person => EF.Functions.Like(person.LastName, $"%{namePattern.Trim()}%"))
          .ToList();

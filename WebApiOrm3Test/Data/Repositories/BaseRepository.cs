@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +27,8 @@ public abstract class BaseRepository {
       IServiceCollection services = new ServiceCollection();
       // Add Core, UseCases, Mapper, ...
       //services.AddCore();
-      // Add Repositories_Old, Test Databases, ...
-      var(useDatabase, dataSource) = services.AddDataTest();
+      // Add Repositories, Test Databases, ...
+      var (useDatabase, dataSource) = services.AddDataTest();
       // Build ServiceProvider,
       // and use Dependency Injection or Service Locator Pattern
       var serviceProvider = services.BuildServiceProvider()
@@ -67,5 +69,17 @@ public abstract class BaseRepository {
       _moviesRepository = serviceProvider.GetRequiredService<IMoviesRepository>()
          ?? throw new Exception("Failed create an instance of IMoviesRepository");
       _seed = new Seed();
+   }
+   
+   public static string ToPrettyJson(
+      string text, 
+      object obj
+   ) {
+      return 
+         text + "\n" +
+         JsonSerializer.Serialize(obj, new JsonSerializerOptions {
+            WriteIndented = true,
+            ReferenceHandler = ReferenceHandler.IgnoreCycles
+         });
    }
 }

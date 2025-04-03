@@ -21,7 +21,7 @@ public class Person: AEntity {
    // ctor EF Core.
    // EF Coreuses this ctor and reflexion to construct new Person object,
    // while ignoring private set in the properties
-   public Person() { } // also needed for NullPerson
+   public Person() { } 
    
    // ctor Domain Model
    public Person(Guid id, string firstName, string lastName, string? email = null,

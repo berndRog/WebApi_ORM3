@@ -4,18 +4,16 @@ namespace WebApiOrm.Core.Interfaces_Old;
 public interface ICarsRepository_Old {
    
    Car? FindById(Guid id);
-   IEnumerable<Car> SelectAll();
-   
+   IEnumerable<Car>? SelectAll();
    void Add(Car car);
    void AddRange(IEnumerable<Car> cars);
    void Update(Car updCar);
    void Remove(Car car);
    
-   IEnumerable<Car> SelectByAttributes(
+   IEnumerable<Car>? SelectByAttributes(
       string? maker, string? model, int? yearMin, int? yearMax, 
       decimal? priceMin, decimal? priceMax);
-   
-   IEnumerable<Car> SelectCarsByPersonId(Guid personId);
+   IEnumerable<Car>? SelectCarsByPersonId(Guid personId);
    Car? FindByIdJoinPerson(Guid id);
    
 }

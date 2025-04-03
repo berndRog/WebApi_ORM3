@@ -9,7 +9,7 @@ public interface IPeopleRepository : IBaseRepository<Person>{
    // void Update(Person updPerson);
    // void Remove(Person person); 
    
-   IEnumerable<Person> SelectByName(string namePattern);
+   IEnumerable<Person>? SelectByName(string namePattern);
    Person? FindByIdJoinUser(Guid id);
    Person? FindByIdJoinCars(Guid id);
    Person? FindByIdJoinMovies(Guid id);

@@ -17,7 +17,7 @@ public abstract class ABaseRepository<T>(
       return entity;
    }
 
-   public virtual IEnumerable<T> SelectAll() {
+   public virtual IEnumerable<T>? SelectAll() {
       var entities = _dbSet.ToList();
       dataContext.LogChangeTracker($"{typeof(T).Name}: SelectAll");
       return entities;

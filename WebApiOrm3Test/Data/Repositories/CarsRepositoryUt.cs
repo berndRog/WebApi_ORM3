@@ -6,7 +6,7 @@ using WebApiOrmTest;
 using WebApiOrmTest.Persistence.Repositories;
 using WebOrmTest.Data.Repositories;
 using Xunit;
-namespace OrmTest.Data.Repositories;
+namespace WebOrmTest.Data.Repositories;
 
 [Collection(nameof(SystemTestCollectionDefinition))]
 public class CarsRepositoryUt : BaseRepository {
@@ -45,9 +45,12 @@ public class CarsRepositoryUt : BaseRepository {
       _dataContext.ClearChangeTracker();
       // retrieve people from database to track it
       var people = _peopleRepository.SelectAll();
+      Assert.NotNull(people);
       // domain model add cars to people
       var (actualPeople, actualCars) = 
          Seed.InitPeopleWithCars(people,_seed.Cars);
+      Assert.NotNull(actualPeople);
+      Assert.NotNull(actualCars);
       // add cars to database
       _carsRepository.AddRange(actualCars);
       _dataContext.SaveAllChanges();
@@ -98,7 +101,9 @@ public class CarsRepositoryUt : BaseRepository {
       _dataContext.ClearChangeTracker();
       // Act
       var actualPeople = _peopleRepository.SelectAll();
+      Assert.NotNull(actualPeople);
       var (_, actualCars) = Seed.InitPeopleWithCars(actualPeople,_seed.Cars);
+      Assert.NotNull(actualCars);
       _carsRepository.AddRange(actualCars);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
