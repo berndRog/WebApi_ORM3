@@ -33,4 +33,12 @@ public class MoviesRepository(
       _dataContext.LogChangeTracker("User: FindByIdJoinPerson");
       return movie;
    }
+   
+   public IEnumerable<Movie>? SelectByIds(IEnumerable<Guid> movieIds) {
+      var movies = _dbSet
+         .Where(movie => movieIds.Contains(movie.Id))
+         .ToList();
+      _dataContext.LogChangeTracker("Movie: SelectByIds");
+      return movies;
+   }
 }

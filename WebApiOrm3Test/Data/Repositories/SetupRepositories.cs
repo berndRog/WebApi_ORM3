@@ -12,16 +12,17 @@ using WebApiOrmTest.Persistence.Repositories;
 using Xunit;
 namespace WebOrmTest.Data.Repositories;
 [Collection(nameof(SystemTestCollectionDefinition))]
-public abstract class BaseRepository {
+public abstract class SetupRepositories {
    
    protected readonly IPeopleRepository _peopleRepository;
    protected readonly IUsersRepository _usersRepository;
-   protected readonly ICarsRepository _carsRepository;
+   protected readonly ICarsRepository ticketsRepository;
    protected readonly IMoviesRepository _moviesRepository;
+   protected readonly ITicketsRepository _ticketsRepository;
    protected readonly IDataContext _dataContext;
    protected readonly Seed _seed;
 
-   protected BaseRepository() {
+   protected SetupRepositories() {
       
       // Test DI-Container
       IServiceCollection services = new ServiceCollection();
@@ -64,10 +65,12 @@ public abstract class BaseRepository {
          ?? throw new Exception("Failed create an instance of IPeopleRepository");
       _usersRepository = serviceProvider.GetRequiredService<IUsersRepository>()
          ?? throw new Exception("Failed create an instance of IUsersRepository");
-      _carsRepository = serviceProvider.GetRequiredService<ICarsRepository>()
+      ticketsRepository = serviceProvider.GetRequiredService<ICarsRepository>()
          ?? throw new Exception("Failed create an instance of ICarsRepository");
       _moviesRepository = serviceProvider.GetRequiredService<IMoviesRepository>()
          ?? throw new Exception("Failed create an instance of IMoviesRepository");
+      _ticketsRepository = serviceProvider.GetRequiredService<ITicketsRepository>()
+         ?? throw new Exception("Failed create an instance of ITicketsRepository");
       _seed = new Seed();
    }
    

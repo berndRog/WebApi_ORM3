@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApiOrm.Core.DomainModel.Entities;
 using WebApiOrm.Core.Utilities;
+using WebApiOrm.Data.Repositories;
 namespace WebApiOrmTest;
 
 public class Seed {
@@ -35,11 +36,25 @@ public class Seed {
    public Movie Movie6{ get; }
    public Movie Movie7{ get; }
    public Movie Movie8{ get; }
+   
+   public Ticket Ticket1{ get; }
+   public Ticket Ticket2{ get; }
+   public Ticket Ticket3{ get; }
+   public Ticket Ticket4{ get; }
+   public Ticket Ticket5{ get; }
+   public Ticket Ticket6{ get; }
+   public Ticket Ticket7{ get; }
+   public Ticket Ticket8{ get; }
+   public Ticket Ticket9{ get; }
+   public Ticket Ticket10{ get; }
+   public Ticket Ticket11{ get; }
+   public Ticket Ticket12{ get; }
 
    public List<Person> People{ get; private set; }
    public List<User> Users{ get; private set; } 
    public List<Car> Cars{ get; private set; } 
    public List<Movie> Movies{ get; private set; } 
+   public List<Ticket> Tickets{ get; private set; }
    #endregion
 
    public Seed(){
@@ -208,10 +223,114 @@ public class Seed {
       );
       #endregion
       
+      #region Tickets
+      // Person1
+      Ticket1 = new Ticket(
+         id: new Guid("00000000-0001-0000-0000-000000000001"),
+         dateTime: new DateTime(2025, 3, 18, 20, 0, 0),
+         price: 10.0m,
+         seat: "H1",
+         person: Person1,
+         movie: Movie1
+      );
+      Ticket2 = new Ticket(
+         id: new Guid("00000000-0002-0000-0000-000000000002"),
+         dateTime: new DateTime(2025, 3, 25, 20, 0, 0, 0),
+         price: 10.0m,
+         seat: "F2",
+         person: Person1,
+         movie: Movie3
+      );
+      Ticket3 = new Ticket(
+         id: new Guid("00000000-0003-0000-0000-000000000003"),
+         dateTime: new DateTime(2025, 4, 1, 20, 0, 0, 0),
+         price: 10.0m,
+         seat: "F3",
+         person: Person1,
+         movie: Movie5
+      );
+      Ticket4 = new Ticket(
+         id: new Guid("00000000-0004-0000-0000-000000000004"),
+         dateTime: new DateTime(2025, 4, 9, 20, 0, 0, 0),
+         price: 10.0m,
+         seat: "H4",
+         person: Person1,
+         movie: Movie7
+      );
+      // Person2
+      Ticket5 = new Ticket(
+         id: new Guid("00000000-0005-0000-0000-000000000005"),
+         dateTime: new DateTime(2025, 3, 19, 20, 0, 0),
+         price: 10.0m,
+         seat: "H5",
+         person: Person2,
+         movie: Movie2
+      );
+      Ticket6 = new Ticket(
+         id: new Guid("00000000-0006-0000-0000-000000000006"),
+         dateTime: new DateTime(2025, 3, 26, 20, 0, 0),
+         price: 10.0m,
+         seat: "F6",
+         person: Person2,
+         movie: Movie4
+      );
+      Ticket7 = new Ticket(
+         id: new Guid("00000000-0007-0000-0000-000000000007"),
+         dateTime: new DateTime(2025, 4, 2, 20, 0, 0),
+         price: 10.0m,
+         seat: "G7",
+         person: Person2,
+         movie: Movie6
+      );
+      Ticket8 = new Ticket(
+         id: new Guid("00000000-0008-0000-0000-000000000008"),
+         dateTime: new DateTime(2025, 4, 9, 20, 0, 0),
+         price: 10.0m,
+         seat: "F8",
+         person: Person2,
+         movie: Movie8
+      );
+      // Person3
+      Ticket9 = new Ticket(
+         id: new Guid("00000000-0009-0000-0000-000000000009"),
+         dateTime: new DateTime(2025, 3, 18, 20, 0, 0),
+         price: 10.0m,
+         seat: "H9",
+         person: Person3,
+         movie: Movie1
+      );
+      Ticket10 = new Ticket(
+         id: new Guid("00000000-0010-0000-0000-000000000010"),
+         dateTime: new DateTime(2025, 3, 26, 20, 0, 0, 0 ,0),
+         price: 10.0m,
+         seat: "F10",
+         person: Person3,
+         movie: Movie2
+      );
+      // Person4
+      Ticket11 = new Ticket(
+         id: new Guid("00000000-0011-0000-0000-000000000011"),
+         dateTime: new DateTime(2025, 4, 1, 20, 0, 0, 0 ,0),
+         price: 10.0m,
+         seat: "F11",
+         person: Person4,
+         movie: Movie3
+      );
+      Ticket12 = new Ticket(
+         id: new Guid("00000000-0012-0000-0000-000000000012"),
+         dateTime: new DateTime(2025, 4, 8, 20, 0, 0, 0 ,0),
+         price: 10.0m,
+         seat: "H12",
+         person: Person4,
+         movie: Movie4
+      );
+      #endregion
       People = [Person1, Person2, Person3, Person4];
       Users = [User1, User2, User3, User4];
       Cars = [Car1, Car2, Car3, Car4, Car5, Car6, Car7, Car8];
       Movies = [Movie1, Movie2, Movie3, Movie4, Movie5, Movie6, Movie7, Movie8];
+      Tickets = [Ticket1, Ticket2, Ticket3, Ticket4, Ticket5, Ticket6, Ticket7, Ticket8,
+         Ticket9, Ticket10, Ticket11, Ticket12];
    }
    
    // Setup Relations between People and Users
@@ -241,60 +360,90 @@ public class Seed {
       IEnumerable<Person> people,
       IEnumerable<User> users
    ) {
-      var arrayPeople = people.ToArray();
-      var arrayUsers = users.ToArray();
-      if(arrayPeople.Count() != 4 || arrayUsers.Count() != 4) 
+      var lPeople = people.ToArray();
+      var lUsers = users.ToArray();
+      if(lPeople.Count() != 4 || lUsers.Count() != 4) 
          throw new ArgumentException("Invalid number of people or users");
-      arrayPeople[0].SetUser(arrayUsers[0]);
-      arrayPeople[1].SetUser(arrayUsers[1]);
-      arrayPeople[2].SetUser(arrayUsers[2]);
-      arrayPeople[3].SetUser(arrayUsers[3]);
-      return arrayUsers;
+      lPeople[0].SetUser(lUsers[0]);
+      lPeople[1].SetUser(lUsers[1]);
+      lPeople[2].SetUser(lUsers[2]);
+      lPeople[3].SetUser(lUsers[3]);
+      return lUsers;
    }
    
    public static (IEnumerable<Person>, IEnumerable<Car>) InitPeopleWithCars(
       IEnumerable<Person> people,
       IEnumerable<Car> cars
    ) {
-      var arrayPeople = people.ToArray();
-      var arrayCars = cars.ToArray();
-      if(arrayPeople.Count() != 4 || arrayCars.Count() != 8) 
+      var lPeople = people.ToList();
+      var lCars = cars.ToList();
+      if(lPeople.Count() != 4 || lCars.Count() != 8) 
          throw new ArgumentException("Invalid number of people or cars");
-      arrayPeople[0].AddCar(arrayCars[0]);
-      arrayPeople[0].AddCar(arrayCars[1]);
-      arrayPeople[1].AddCar(arrayCars[2]);
-      arrayPeople[1].AddCar(arrayCars[3]);
-      arrayPeople[2].AddCar(arrayCars[4]);
-      arrayPeople[2].AddCar(arrayCars[5]);
-      arrayPeople[2].AddCar(arrayCars[6]);
-      arrayPeople[3].AddCar(arrayCars[7]);
-      return (arrayPeople, arrayCars);
+      lPeople[0].AddCar(lCars[0]);
+      lPeople[0].AddCar(lCars[1]);
+      lPeople[1].AddCar(lCars[2]);
+      lPeople[1].AddCar(lCars[3]);
+      lPeople[2].AddCar(lCars[4]);
+      lPeople[2].AddCar(lCars[5]);
+      lPeople[2].AddCar(lCars[6]);
+      lPeople[3].AddCar(lCars[7]);
+      return (lPeople, lCars);
    }
    
    public static (IEnumerable<Person>, IEnumerable<Movie>) InitPeopleWithMovies(
       IEnumerable<Person> people,
       IEnumerable<Movie> movies
    ) {
-      var arrayPeople = people.ToArray();
-      var arrayMovies = movies.ToArray();
-      if(arrayPeople.Count() != 4 || arrayMovies.Count() != 8) 
+      var lPeople = people.ToList();
+      var lMovies = movies.ToList();
+      if(lPeople.Count() != 4 || lMovies.Count() != 8) 
          throw new ArgumentException("Invalid number of people or cars");
       
-      arrayPeople[0].AddMovie(arrayMovies[0]);
-      arrayPeople[0].AddMovie(arrayMovies[2]);
-      arrayPeople[0].AddMovie(arrayMovies[4]);
-      arrayPeople[0].AddMovie(arrayMovies[6]);
+      lPeople[0].AddMovie(lMovies[0]);
+      lPeople[0].AddMovie(lMovies[2]);
+      lPeople[0].AddMovie(lMovies[4]);
+      lPeople[0].AddMovie(lMovies[6]);
 
-      arrayPeople[1].AddMovie(arrayMovies[1]);
-      arrayPeople[1].AddMovie(arrayMovies[3]);
-      arrayPeople[1].AddMovie(arrayMovies[5]);
-      arrayPeople[1].AddMovie(arrayMovies[7]);
+      lPeople[1].AddMovie(lMovies[1]);
+      lPeople[1].AddMovie(lMovies[3]);
+      lPeople[1].AddMovie(lMovies[5]);
+      lPeople[1].AddMovie(lMovies[7]);
          
-      arrayPeople[2].AddMovie(arrayMovies[0]);
-      arrayPeople[2].AddMovie(arrayMovies[1]);
+      lPeople[2].AddMovie(lMovies[0]);
+      lPeople[2].AddMovie(lMovies[1]);
       
-      arrayPeople[3].AddMovie(arrayMovies[2]);
-      return (arrayPeople, arrayMovies);
+      lPeople[3].AddMovie(lMovies[2]);
+      return (lPeople, lMovies);
+   }
+   
+   public static (IEnumerable<Person>, IEnumerable<Movie>, IEnumerable<Ticket>) InitTicketsWithPersonAndMovie(
+      IEnumerable<Person> people,
+      IEnumerable<Movie> movies,
+      IEnumerable<Ticket> tickets
+   ) {
+      var lPeople = people.ToList();
+      var lMovies = movies.ToList();
+      var lTickets = tickets.ToList();
+      if(lPeople.Count() != 4 || lMovies.Count() != 8 || lTickets.Count() != 12)
+         throw new ArgumentException("Invalid number of people or movies or tickets");
+      
+      lTickets[0].SetPerson(lPeople[0]); lTickets[0].SetMovie(lMovies[0]);
+      lTickets[1].SetPerson(lPeople[0]); lTickets[1].SetMovie(lMovies[2]);
+      lTickets[2].SetPerson(lPeople[0]); lTickets[2].SetMovie(lMovies[4]);
+      lTickets[3].SetPerson(lPeople[0]); lTickets[3].SetMovie(lMovies[6]);
+
+      lTickets[4].SetPerson(lPeople[1]); lTickets[4].SetMovie(lMovies[1]);
+      lTickets[5].SetPerson(lPeople[1]); lTickets[5].SetMovie(lMovies[3]);
+      lTickets[6].SetPerson(lPeople[1]); lTickets[6].SetMovie(lMovies[4]);
+      lTickets[7].SetPerson(lPeople[1]); lTickets[7].SetMovie(lMovies[5]);
+
+      lTickets[8].SetPerson(lPeople[2]); lTickets[8].SetMovie(lMovies[0]);
+      lTickets[9].SetPerson(lPeople[2]); lTickets[9].SetMovie(lMovies[1]);
+
+      lTickets[10].SetPerson(lPeople[3]); lTickets[10].SetMovie(lMovies[2]);
+      lTickets[11].SetPerson(lPeople[3]); lTickets[11].SetMovie(lMovies[3]);
+      
+      return (lPeople, lMovies, lTickets);
    }
    
 }

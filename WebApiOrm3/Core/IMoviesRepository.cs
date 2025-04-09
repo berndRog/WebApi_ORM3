@@ -11,4 +11,6 @@ public interface IMoviesRepository: IBaseRepository<Movie> {
 
    Movie? FindByTitle(string title);
    Movie? FindByIdJoinPerson(Guid id);
+   
+   IEnumerable<Movie>? SelectByIds(IEnumerable<Guid> movieIds);
 }

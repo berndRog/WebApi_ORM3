@@ -17,6 +17,7 @@ public static class ServiceExtensions {
       services.AddScoped<IUsersRepository, UsersRepository>();
       services.AddScoped<ICarsRepository, CarsRepository>();
       services.AddScoped<IMoviesRepository, MoviesRepository>();
+      services.AddScoped<ITicketsRepository, TicketsRepository>();
       
       // Add DbContext (Database) to DI-Container
       var (useDatabase, dataSource) = DataContext.EvalDatabaseConfiguration(configuration);

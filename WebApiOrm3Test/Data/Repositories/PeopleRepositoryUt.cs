@@ -11,7 +11,7 @@ using Xunit;
 namespace WebOrmTest.Data.Repositories;
 
 [Collection(nameof(SystemTestCollectionDefinition))]
-public class PeopleRepositoryUt : BaseRepository {
+public class PeopleRepositoryUt : SetupRepositories {
 
    #region PersonOnly
    [Fact]
@@ -174,8 +174,8 @@ public class PeopleRepositoryUt : BaseRepository {
       person.AddCar(car2);
       _dataContext.LogChangeTracker("AddJoinCarsUt");
       // add the cars to the repository
-      _carsRepository.Add(car1);
-      _carsRepository.Add(car2);
+      ticketsRepository.Add(car1);
+      ticketsRepository.Add(car2);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
@@ -183,9 +183,9 @@ public class PeopleRepositoryUt : BaseRepository {
       var actual = _peopleRepository.FindByIdJoinCars(person.Id);      
       Assert.NotNull(actual);
       
-      Console.WriteLine(BaseRepository.ToPrettyJson("person", person));
+      Console.WriteLine(SetupRepositories.ToPrettyJson("person", person));
      
-      Console.WriteLine(BaseRepository.ToPrettyJson("actual", actual));
+      Console.WriteLine(SetupRepositories.ToPrettyJson("actual", actual));
       
       
       // Assert
@@ -206,8 +206,8 @@ public class PeopleRepositoryUt : BaseRepository {
       Assert.NotNull(person);
       person.AddCar(_seed.Car1);
       person.AddCar(_seed.Car2);
-      _carsRepository.Add(_seed.Car1);
-      _carsRepository.Add(_seed.Car2);
+      ticketsRepository.Add(_seed.Car1);
+      ticketsRepository.Add(_seed.Car2);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
 
@@ -217,8 +217,8 @@ public class PeopleRepositoryUt : BaseRepository {
 
       // Assert
       var actualPerson= _peopleRepository.FindById(_seed.Person1.Id);
-      var actualCar1 = _carsRepository.FindById(_seed.Car1.Id);
-      var actualCar2 = _carsRepository.FindById(_seed.Car2.Id);
+      var actualCar1 = ticketsRepository.FindById(_seed.Car1.Id);
+      var actualCar2 = ticketsRepository.FindById(_seed.Car2.Id);
 
       Assert.Null(actualPerson);
       Assert.Null(actualCar1);

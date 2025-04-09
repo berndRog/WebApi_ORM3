@@ -33,4 +33,15 @@ public class Ticket: AEntity {
       MovieId = movie.Id;
    }
    
+   public void SetPerson(Person person) {
+      Person = person;
+      PersonId = person.Id;
+   }
+   
+   public void SetMovie(Movie movie) {
+      Movie = movie;
+      MovieId = movie.Id;
+   }
+
+   
 }

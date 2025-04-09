@@ -9,7 +9,7 @@ using Xunit;
 namespace WebOrmTest.Data.Repositories;
 
 [Collection(nameof(SystemTestCollectionDefinition))]
-public class CarsRepositoryUt : BaseRepository {
+public class CarsRepositoryUt : SetupRepositories {
    
    [Fact]
    public void FindById() {
@@ -24,12 +24,12 @@ public class CarsRepositoryUt : BaseRepository {
       actualPerson.AddCar(_seed.Car1);
       actualPerson.AddCar(_seed.Car2);
       // add cars to database
-      _carsRepository.Add(_seed.Car1);
-      _carsRepository.Add(_seed.Car2);
+      ticketsRepository.Add(_seed.Car1);
+      ticketsRepository.Add(_seed.Car2);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       // Act 
-      var actual = _carsRepository.FindById(_seed.Car1.Id);
+      var actual = ticketsRepository.FindById(_seed.Car1.Id);
       var comparison = new ComparisonBuilder()
 //       .IgnoreCircularReferences()
          .IgnoreProperty<Car>(c=> c.Person)
@@ -52,11 +52,11 @@ public class CarsRepositoryUt : BaseRepository {
       Assert.NotNull(actualPeople);
       Assert.NotNull(actualCars);
       // add cars to database
-      _carsRepository.AddRange(actualCars);
+      ticketsRepository.AddRange(actualCars);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       // Act 
-      var actual = _carsRepository.SelectAll();
+      var actual = ticketsRepository.SelectAll();
       var comparison = new ComparisonBuilder()
          //       .IgnoreCircularReferences()
          .IgnoreProperty<Car>(c=> c.Person)
@@ -80,12 +80,12 @@ public class CarsRepositoryUt : BaseRepository {
       var car = _seed.Car1;
       actualPerson?.AddCar(car); // car is marked as added, Person remains unchanged from the database perspective 
       // add car to database
-      _carsRepository.Add(car);
+      ticketsRepository.Add(car);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Assert
-      var actual = _carsRepository.FindById(car.Id);
+      var actual = ticketsRepository.FindById(car.Id);
       var comparison = new ComparisonBuilder()
          //       .IgnoreCircularReferences()
          .IgnoreProperty<Car>(c=> c.Person)
@@ -104,11 +104,11 @@ public class CarsRepositoryUt : BaseRepository {
       Assert.NotNull(actualPeople);
       var (_, actualCars) = Seed.InitPeopleWithCars(actualPeople,_seed.Cars);
       Assert.NotNull(actualCars);
-      _carsRepository.AddRange(actualCars);
+      ticketsRepository.AddRange(actualCars);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       // Assert
-      var actual = _carsRepository.SelectAll();
+      var actual = ticketsRepository.SelectAll();
       var comparison = new ComparisonBuilder()
          //       .IgnoreCircularReferences()
          .IgnoreProperty<Car>(c=> c.Person)
@@ -131,12 +131,12 @@ public class CarsRepositoryUt : BaseRepository {
       var car = _seed.Car1;
       actualPerson.AddCar(car);
       // add car to database
-      _carsRepository.Add(car);
+      ticketsRepository.Add(car);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Assert
-      var actual = _carsRepository.FindById(_seed.Car1.Id);
+      var actual = ticketsRepository.FindById(_seed.Car1.Id);
       var comparison = new ComparisonBuilder()
          .IgnoreProperty<Car>(c => c.Person)
          .Create();
@@ -158,11 +158,11 @@ public class CarsRepositoryUt : BaseRepository {
       _dataContext.ClearChangeTracker();
       
       // Act
-      _carsRepository.Remove(car1);
+      ticketsRepository.Remove(car1);
       _dataContext.SaveAllChanges();
       
       // Assert
-      var actual = _carsRepository.FindById(car1.Id);
+      var actual = ticketsRepository.FindById(car1.Id);
       Assert.Null(actual);
    }
    
@@ -179,14 +179,14 @@ public class CarsRepositoryUt : BaseRepository {
       actualPerson.AddCar(_seed.Car1);
       actualPerson.AddCar(_seed.Car2);
       // add cars cars to repository and save all cars to database
-      _carsRepository.Add(_seed.Car1);
-      _carsRepository.Add(_seed.Car2);
+      ticketsRepository.Add(_seed.Car1);
+      ticketsRepository.Add(_seed.Car2);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       var expectedCars = new List<Car> {_seed.Car1, _seed.Car2};
       
       // Act
-      var actual = _carsRepository.SelectCarsByPersonId(_seed.Person1.Id);
+      var actual = ticketsRepository.SelectCarsByPersonId(_seed.Person1.Id);
       
       // Assert
       var comparison = new ComparisonBuilder()

@@ -8,88 +8,104 @@ using Xunit;
 namespace WebOrmTest.Data.Repositories;
 
 [Collection(nameof(SystemTestCollectionDefinition))]
-public class MoviesRepositoryUt : SetupRepositories {
+public class TicketsRepositoryUt : SetupRepositories {
    
    [Fact]
    public void FindById() {
       // Arrange
       _peopleRepository.Add(_seed.Person1);
-      _dataContext.SaveAllChanges();
-      _dataContext.ClearChangeTracker();
-      // retrieve person from database to track it
-      var actualPerson = _peopleRepository.FindById(_seed.Person1.Id);
-      Assert.NotNull(actualPerson);
-      // domain model
-      actualPerson.AddMovie(_seed.Movie1);
-      //actualPerson.AddMovie(_seed.Movie3);
-      // add cars to database
       _moviesRepository.Add(_seed.Movie1);
-      //_moviesRepository.Add(_seed.Movie3);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
-      // Act 
-      var actual = _moviesRepository.FindById(_seed.Movie1.Id);
+      
+      // retrieve person and movie from database to track it
+      var actualPerson = _peopleRepository.FindById(_seed.Person1.Id);
+      var actualMovie = _moviesRepository.FindById(_seed.Movie1.Id);
+      Assert.NotNull(actualPerson);
+      Assert.NotNull(actualMovie);
+      
+      // Act
+      var ticket = _seed.Ticket1;
+      ticket.SetMovie(actualMovie);
+      // domain model
+      actualPerson.AddTicket(actualMovie, ticket);
+      // add ticket and movie to the repositories, not the person and save to database
+      _ticketsRepository.Add(ticket);
+      _dataContext.SaveAllChanges();
+      _dataContext.ClearChangeTracker();
+      
+      // Assert
+      var actualTicket = _ticketsRepository.FindById(_seed.Ticket1.Id);
       var comparison = new ComparisonBuilder()
          //.IgnoreCircularReferences()
-         .IgnoreProperty<Movie>(movie => movie.People)
+         .IgnoreProperty<Ticket>(ticket => ticket.Person)  // check PersonId only
+         .IgnoreProperty<Ticket>(ticket => ticket.Movie)   // check MovieId only
          .Create();
-      Assert.True(_seed.Movie1.IsDeepEqual(actual, comparison));
+      Assert.True(ticket.IsDeepEqual(actualTicket, comparison));
    }
    
    [Fact]
    public void SelectAll() {
       // Arrange
       _peopleRepository.AddRange(_seed.People);
+      _moviesRepository.AddRange(_seed.Movies);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
+      
       // retrieve people from database to track it
       var people = _peopleRepository.SelectAll();
+      var movies = _moviesRepository.SelectAll();
       Assert.NotNull(people);
+      Assert.NotNull(movies);
+      
       // domain model add cars to people
-      var (actualPeople, actualMovies) = 
-         Seed.InitPeopleWithMovies(people,_seed.Movies);
-      Assert.NotNull(actualPeople);
-      Assert.NotNull(actualMovies);
-      // add cars to database
-      _moviesRepository.AddRange(actualMovies);
+      var (_, _, actualTickets) = 
+         Seed.InitTicketsWithPersonAndMovie(people, movies, _seed.Tickets);
+      Assert.NotNull(actualTickets);
+      // add tickets to the repository and save to database
+      _ticketsRepository.AddRange(actualTickets);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
+
       // Act 
-      var actual = _moviesRepository.SelectAll();
+      var actual = _ticketsRepository.SelectAll();
       var comparison = new ComparisonBuilder()
          //       .IgnoreCircularReferences()
-         .IgnoreProperty<Movie>(movie => movie.People)
+         .IgnoreProperty<Ticket>(ticket => ticket.Person)  // check PersonId only
+         .IgnoreProperty<Ticket>(ticket => ticket.Movie)   // check MovieId only
          .Create();
-      Assert.True(actualMovies.IsDeepEqual(actual, comparison));
+      Assert.True(actualTickets.IsDeepEqual(actual, comparison));
    }
    
    [Fact]
    public void AddUt() {
       // Arrange
-      var person = _seed.Person1;
-      _peopleRepository.Add(person);
+      _peopleRepository.Add(_seed.Person1);
+      _moviesRepository.Add(_seed.Movie1);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Act
       // retrieve person from database which is tracked
-      var actualPerson = _peopleRepository.FindById(person.Id);
+      var actualPerson = _peopleRepository.FindById(_seed.Person1.Id);
+      var actualMovie = _moviesRepository.FindById(_seed.Movie1.Id);
       Assert.NotNull(actualPerson);
       // domain model
-      var movie = _seed.Movie1;
-      actualPerson?.AddMovie(movie); // movie is marked as added, Person remains unchanged from the database perspective 
+      var ticket = _seed.Ticket1;
+      actualPerson?.AddTicket(actualMovie,ticket);  
       // add car to database
-      _moviesRepository.Add(movie);
+      _ticketsRepository.Add(ticket);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Assert
-      var actual = _moviesRepository.FindById(movie.Id);
+      var actual = _ticketsRepository.FindById(ticket.Id);
       var comparison = new ComparisonBuilder()
          //       .IgnoreCircularReferences()
-         .IgnoreProperty<Movie>(movie => movie.People)
+         .IgnoreProperty<Ticket>(ticket => ticket.Person)
+         .IgnoreProperty<Ticket>(ticket => ticket.Movie)
          .Create();
-      Assert.True(movie.IsDeepEqual(actual, comparison));
+      Assert.True(ticket.IsDeepEqual(actual, comparison));
    }
    
    [Fact]
@@ -116,52 +132,33 @@ public class MoviesRepositoryUt : SetupRepositories {
    }
    
    [Fact]
-   public void UpdateUt() {
-      // Arrange
-      _peopleRepository.Add(_seed.Person1);
-      _dataContext.SaveAllChanges();
-      _dataContext.ClearChangeTracker();
-      
-      // Act
-      // retrieve person from database to track it
-      var actualPerson = _peopleRepository.FindById(_seed.Person1.Id);
-      Assert.NotNull(actualPerson);
-      // domain model
-      var car = _seed.Car1;
-      actualPerson.AddCar(car);
-      // add car to database
-      ticketsRepository.Add(car);
-      _dataContext.SaveAllChanges();
-      _dataContext.ClearChangeTracker();
-      
-      // Assert
-      var actual = ticketsRepository.FindById(_seed.Car1.Id);
-      var comparison = new ComparisonBuilder()
-         .IgnoreProperty<Car>(c => c.Person)
-         .Create();
-      Assert.True(car.IsDeepEqual(actual, comparison));
-   }
-   
-   [Fact]
    public void RemoveUt() {
       // Arrange
-      var person = _seed.Person1;
-      var car1 = _seed.Car1;
-      var car2 = _seed.Car2;
-      person.AddCar(car1);
-      person.AddCar(car2);
-      
-      // add person and cars to database
-      _peopleRepository.Add(person);
+      // domain model
+      _seed.Person1.AddTicket(_seed.Movie1, _seed.Ticket1);
+      // repositories and database
+      _peopleRepository.Add(_seed.Person1);
+      _moviesRepository.Add(_seed.Movie1);
+      _ticketsRepository.Add(_seed.Ticket1);
       _dataContext.SaveAllChanges();
       _dataContext.ClearChangeTracker();
       
       // Act
-      ticketsRepository.Remove(car1);
+      var actualPerson = _peopleRepository.FindById(_seed.Person1.Id);
+      var actualMovie = _moviesRepository.FindById(_seed.Movie1.Id);
+      var actualTicket = _ticketsRepository.FindById(_seed.Ticket1.Id);
+      Assert.NotNull(actualPerson);
+      Assert.NotNull(actualMovie);
+      Assert.NotNull(actualTicket);
+      // domain model
+      actualPerson.RemoveTicket(actualMovie, actualTicket);
+      _ticketsRepository.Remove(actualTicket);
       _dataContext.SaveAllChanges();
+      _dataContext.ClearChangeTracker();
+      
       
       // Assert
-      var actual = ticketsRepository.FindById(car1.Id);
+      var actual = ticketsRepository.FindById(_seed.Ticket1.Id);
       Assert.Null(actual);
    }
 

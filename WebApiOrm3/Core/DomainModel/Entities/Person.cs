@@ -86,13 +86,17 @@ public class Person: AEntity {
    
    
    // 1:n Person <-> Tickets
-   public void CreateTicket(Movie movie, DateTime dateTime, decimal price, string seat) {
-      var ticket = new Ticket(Guid.NewGuid(), dateTime, price, seat, this, movie);
-      ticket.Movie.Tickets.Add(ticket);
+   public void AddTicket(Movie movie, Ticket ticket) {
+      // Ticket (0,1) : (1,1) Person = this
+      ticket.SetPerson(this);
+      // Ticket (0,1) : (1,1) Movie  = movie
+      ticket.SetMovie(movie);
+      // Add ticket to Person and Movie
       Tickets.Add(ticket);
+      ticket.Movie.Tickets.Add(ticket);
    }
-   public void RemoveTicket(Ticket ticket) {
-      ticket.Movie.Tickets.Remove(ticket);
+   public void RemoveTicket(Movie movie, Ticket ticket) {
+      movie.Tickets.Remove(ticket);
       Tickets.Remove(ticket);
    }
    
