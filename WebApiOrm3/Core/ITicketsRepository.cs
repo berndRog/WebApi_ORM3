@@ -11,6 +11,5 @@ public interface ITicketsRepository: IBaseRepository<Ticket> {
 
 
    IEnumerable<Ticket>? SelectByPersonId(Guid personId);
-   
    Ticket? FindByIdJoinPersonAndMovie(Guid id);
 }

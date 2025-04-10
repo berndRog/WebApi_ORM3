@@ -8,7 +8,7 @@ public class TicketsRepository(
 ) : ABaseRepository<Ticket>(dataContext), ITicketsRepository {
    private readonly DataContext _dataContext = dataContext;
 
-   // get visitors for a movie
+   // get tickets for a personId
    public IEnumerable<Ticket>? SelectByPersonId(Guid personId) {
       var tickets = _dbSet
          .Where(ticket => ticket.PersonId == personId)
@@ -17,6 +17,7 @@ public class TicketsRepository(
       return tickets;
    }
 
+   // get ticket by id and include Person and Movie
    public Ticket? FindByIdJoinPersonAndMovie(Guid id) {
       var movie = _dbSet
          .Where(movie => movie.Id == id)

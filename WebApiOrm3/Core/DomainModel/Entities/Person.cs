@@ -93,11 +93,11 @@ public class Person: AEntity {
       ticket.SetMovie(movie);
       // Add ticket to Person and Movie
       Tickets.Add(ticket);
-      ticket.Movie.Tickets.Add(ticket);
+      movie.AddTicket(ticket);
    }
    public void RemoveTicket(Movie movie, Ticket ticket) {
-      movie.Tickets.Remove(ticket);
       Tickets.Remove(ticket);
+      movie.RemoveTicket(ticket);
    }
    
 }

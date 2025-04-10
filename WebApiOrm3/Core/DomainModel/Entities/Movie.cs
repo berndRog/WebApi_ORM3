@@ -31,4 +31,12 @@ public class Movie: AEntity {
    public void RemovePerson(Person person) {
       People.Remove(person);
    }
+   
+   // Movie <-> Ticket
+   public void AddTicket(Ticket ticket) {
+      Tickets.Add(ticket);
+   }
+   public void RemoveTicket(Ticket ticket) {
+      Tickets.Remove(ticket);
+   }
 }
